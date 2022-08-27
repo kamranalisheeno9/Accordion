@@ -10,7 +10,6 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const CheckboxComp = () => {
-
   const Countries = ["Brazil", "Kenya"];
   const EuropeCountries = ["Rome", "Paris", "Kiev"];
 
@@ -19,14 +18,20 @@ const CheckboxComp = () => {
 
   const getValue = (e) => {
     const countryNames = country;
-    countryNames.push(e.target.value);
-    setCountry(countryNames);
-};
+    if (e.target.checked == true) {
+      countryNames.push(e.target.value);
+      setCountry(countryNames);
+    }
+    console.log(e.target.value);
+  };
 
-const getValueEurope = (e) => {
+  const getValueEurope = (e) => {
     const EuropeNames = Europe;
-    EuropeNames.push(e.target.value);
-    setEurope(EuropeNames);
+    if (e.target.checked == true) {
+      EuropeNames.push(e.target.value);
+      setEurope(EuropeNames);
+    }
+    console.log(e.target.value);
   };
   return (
     <div className="MainComp" style={{ textAlign: "left" }}>
