@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Checkbox } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
@@ -9,30 +9,54 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+
+const EuropeData = [
+  { name: "Rome" },
+  { name: "Paris" },
+  { name: "Kiev" },
+];
+const Countries = ["Brazil", "Kenya"];
+
+
 const CheckboxComp = () => {
-  const Countries = ["Brazil", "Kenya"];
-  const EuropeCountries = ["Rome", "Paris", "Kiev"];
-
-  const [country, setCountry] = useState([]);
   const [Europe, setEurope] = useState([]);
+  const [country, setCountry] = useState([]);
+  
+  
+  
+  useEffect(() => {
+    setEurope(EuropeData);
+  }, []);
+  
+  
+  const handleChange = (e) => {
+    const { name, checked } = e.target;
+    if (name === "europe") {
+      let tempUser = Europe.map((user) => {
+        return { ...user, isChecked: checked };
+      });
+      setEurope(tempUser);
+    } else {
+      let tempUser = Europe.map((user) =>
+        user.name === name ? { ...user, isChecked: checked } : user
+      );
+      setEurope(tempUser);
+    }
+    console.log(e.target.name);
 
+  };
+
+  
   const getValue = (e) => {
     const countryNames = country;
     if (e.target.checked == true) {
-      countryNames.push(e.target.value);
+      countryNames.push(e.target.name);
       setCountry(countryNames);
     }
-    console.log(e.target.value);
+    console.log(e.target.name);
   };
 
-  const getValueEurope = (e) => {
-    const EuropeNames = Europe;
-    if (e.target.checked == true) {
-      EuropeNames.push(e.target.value);
-      setEurope(EuropeNames);
-    }
-    console.log(e.target.value);
-  };
+  
   return (
     <div className="MainComp" style={{ textAlign: "left" }}>
       <Accordion>
@@ -51,7 +75,7 @@ const CheckboxComp = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        value={countries}
+                        name={countries}
                         onChange={(e) => getValue(e)}
                       />
                     }
@@ -75,8 +99,10 @@ const CheckboxComp = () => {
                     control={
                       <Checkbox
                         style={{ marginLeft: "20px" }}
-                        value="Europe"
-                        onChange={(e) => getValueEurope(e)}
+                        name="europe"
+                
+                        checked={!Europe.some((user) => user?.isChecked !== true)}
+                        onChange={handleChange}
                       />
                     }
                     label="Europe"
@@ -87,17 +113,18 @@ const CheckboxComp = () => {
           </AccordionSummary>
           <AccordionDetails>
             <FormControl component="fieldset" variant="standard">
-              {EuropeCountries.map((countries, key) => {
+              {Europe.map((user, index) => {
                 return (
-                  <FormGroup key={key}>
+                  <FormGroup key={index}>
                     <FormControlLabel
                       control={
                         <Checkbox
-                          value={countries}
-                          onChange={(e) => getValueEurope(e)}
+                        name={user.name}
+                        checked={user?.isChecked || false}
+                        onChange={handleChange}
                         />
                       }
-                      label={countries}
+                      label={user.name}
                     />
                   </FormGroup>
                 );
